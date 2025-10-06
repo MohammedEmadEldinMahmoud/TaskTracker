@@ -3,16 +3,13 @@ package com.luv2code.tasktracker.tasktracker.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.luv2code.tasktracker.tasktracker.entity.User;
 import com.luv2code.tasktracker.tasktracker.enums.Status;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL) // hide nulls in JSON responses
-public class TaskDTO {
-    @Null(message = "Task ID must not be provided when creating a new task")
-    private int id;
-    @NotBlank(message = "Title is required")
+public class TaskRequestDTO {
+
+    @NotNull(message = "Title is required")
     private String title;
     private String description;
     @NotNull(message = "Status is required")
@@ -21,11 +18,11 @@ public class TaskDTO {
     private User createdBy;
     private User assignedTo;
 
-    public TaskDTO() {
+    public TaskRequestDTO() {
     }
 
-    public TaskDTO(int id, String title, String description, Status status, User createdBy, User assignedTo) {
-        this.id = id;
+    public TaskRequestDTO( String title, String description, Status status, User createdBy, User assignedTo) {
+
         this.title = title;
         this.description = description;
         this.status = status;
@@ -33,13 +30,7 @@ public class TaskDTO {
         this.assignedTo = assignedTo;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

@@ -1,12 +1,10 @@
 package com.luv2code.tasktracker.tasktracker.service;
 
-import com.luv2code.tasktracker.tasktracker.dto.JwtAuthenticationResponseDTO;
-import com.luv2code.tasktracker.tasktracker.dto.LoginRequestDTO;
-import com.luv2code.tasktracker.tasktracker.dto.RefreshTokenRequestDTO;
-import com.luv2code.tasktracker.tasktracker.dto.RegisterRequestDTO;
+import com.luv2code.tasktracker.tasktracker.dto.*;
 import com.luv2code.tasktracker.tasktracker.entity.Role;
 import com.luv2code.tasktracker.tasktracker.entity.User;
 import com.luv2code.tasktracker.tasktracker.enums.RoleName;
+import com.luv2code.tasktracker.tasktracker.mapper.UserMapper;
 import com.luv2code.tasktracker.tasktracker.repositories.RoleRepository;
 import com.luv2code.tasktracker.tasktracker.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +37,7 @@ public class AuthenticationService {
         this.jwtService = jwtService;
     }
 
-    public User register(RegisterRequestDTO registerRequestDTO){
+    public UserDTO register(RegisterRequestDTO registerRequestDTO){
         User user = new User();
         user.setEmail(registerRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
@@ -50,8 +48,8 @@ public class AuthenticationService {
         Role role = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new RuntimeException("Role USER not found in DB"));
         user.setRole(role);
-
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        return UserMapper.toDTO(newUser);
     }
 
     public JwtAuthenticationResponseDTO login(LoginRequestDTO loginRequestDTO){

@@ -1,6 +1,7 @@
 package com.luv2code.tasktracker.tasktracker.service;
 
-import com.luv2code.tasktracker.tasktracker.dto.TaskDTO;
+import com.luv2code.tasktracker.tasktracker.dto.TaskRequestDTO;
+import com.luv2code.tasktracker.tasktracker.dto.TaskResponseDTO;
 import com.luv2code.tasktracker.tasktracker.entity.Task;
 import com.luv2code.tasktracker.tasktracker.entity.User;
 import com.luv2code.tasktracker.tasktracker.enums.RoleName;
@@ -35,10 +36,10 @@ public class TaskService {
     }
 
 
-    public TaskDTO createTask(Task task) {
-        // set the task id to 0 just in case they put an id in json
-        // to enforce the creation of a new task not an update
-        task.setId(0);
+    public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
+
+        Task task = TaskMapper.fromDTO(taskRequestDTO);
+
         Optional<User> result = userRepository.findById(task.getCreatedBy().getId());
         User creator = null;
         if (result.isPresent()) {
@@ -85,7 +86,7 @@ public class TaskService {
 
 
 
-    public List<TaskDTO> findAll(Status status, Integer assignee_id) {
+    public List<TaskResponseDTO> findAll(Status status, Integer assignee_id) {
         // get authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -129,7 +130,7 @@ public class TaskService {
     }
 
 
-    public TaskDTO findById(int task_id) {
+    public TaskResponseDTO findById(int task_id) {
         // get authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -152,31 +153,31 @@ public class TaskService {
     }
 
 
-    public TaskDTO updateTask(int task_id, Task newTask) {
+    public TaskResponseDTO updateTask(int task_id, TaskRequestDTO theTaskRequestDTO) {
         Optional<Task> result = taskRepository.findById(task_id);
         Task theTask = null;
         if (result.isPresent()) {
             theTask = result.get();
-            if (newTask.getTitle() != null) {
-                theTask.setTitle(newTask.getTitle());
+            if (theTaskRequestDTO.getTitle() != null) {
+                theTask.setTitle(theTaskRequestDTO.getTitle());
             }
-            if (newTask.getDescription() != null) {
-                theTask.setDescription(newTask.getDescription());
+            if (theTaskRequestDTO.getDescription() != null) {
+                theTask.setDescription(theTaskRequestDTO.getDescription());
             }
-            if (newTask.getStatus() != null) {
-                boolean isValid = Arrays.stream(Status.values()).anyMatch(status -> status == newTask.getStatus());
+            if (theTaskRequestDTO.getStatus() != null) {
+                boolean isValid = Arrays.stream(Status.values()).anyMatch(status -> status == theTaskRequestDTO.getStatus());
                 if (!isValid) {
-                    throw new InvalidArgumentException("Invalid status value" + newTask.getStatus());
+                    throw new InvalidArgumentException("Invalid status value" + theTaskRequestDTO.getStatus());
                 }
                 Optional<Task> taskResult = taskRepository.findById(task_id);
                 if (taskResult.isPresent()) {
-                    theTask.setStatus(newTask.getStatus());
+                    theTask.setStatus(theTaskRequestDTO.getStatus());
                 }
             }
-            if (newTask.getAssignedTo() != null) {
-                Optional<User> assignee = userRepository.findById(newTask.getAssignedTo().getId());
+            if (theTaskRequestDTO.getAssignedTo() != null) {
+                Optional<User> assignee = userRepository.findById(theTaskRequestDTO.getAssignedTo().getId());
                 if (assignee.isPresent()) {
-                    theTask.setAssignedTo(newTask.getAssignedTo());
+                    theTask.setAssignedTo(theTaskRequestDTO.getAssignedTo());
                 } else {
                     throw new LogicException("Assignee was not found ");
                 }
@@ -190,7 +191,7 @@ public class TaskService {
     }
 
 
-    public TaskDTO updateTaskStatus(int task_id, Status newStatus) {
+    public TaskResponseDTO updateTaskStatus(int task_id, Status newStatus) {
 
         if (newStatus == null) {
             throw new InvalidArgumentException("Status cannot be null");

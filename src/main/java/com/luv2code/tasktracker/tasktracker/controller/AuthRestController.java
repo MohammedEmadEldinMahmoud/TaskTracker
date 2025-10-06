@@ -1,9 +1,6 @@
 package com.luv2code.tasktracker.tasktracker.controller;
 
-import com.luv2code.tasktracker.tasktracker.dto.JwtAuthenticationResponseDTO;
-import com.luv2code.tasktracker.tasktracker.dto.LoginRequestDTO;
-import com.luv2code.tasktracker.tasktracker.dto.RefreshTokenRequestDTO;
-import com.luv2code.tasktracker.tasktracker.dto.RegisterRequestDTO;
+import com.luv2code.tasktracker.tasktracker.dto.*;
 import com.luv2code.tasktracker.tasktracker.entity.User;
 import com.luv2code.tasktracker.tasktracker.service.AuthenticationService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +19,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+    public UserDTO register(@RequestBody RegisterRequestDTO registerRequestDTO) {
         return authenticationService.register(registerRequestDTO);
     }
 
