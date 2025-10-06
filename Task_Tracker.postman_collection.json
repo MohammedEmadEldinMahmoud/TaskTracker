@@ -232,21 +232,19 @@
 			"name": "Update a status",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6aWFkc2FhZEBnbWFpbC5jb20iLCJpYXQiOjE3NTk3NTczNzgsImV4cCI6MTc1OTc1ODgxOH0.SJWkQ2YTsdKLZZ95izo1qRRcObhKe1RRmAM-0j7gHZU",
+							"type": "string"
+						}
+					]
 				},
 				"method": "PATCH",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"status\":\"IN_PROGRESS\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/tasks/1/status",
+					"raw": "http://localhost:8080/api/tasks/4/status?status=IN_PROGRESS",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -255,8 +253,14 @@
 					"path": [
 						"api",
 						"tasks",
-						"1",
+						"4",
 						"status"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "IN_PROGRESS"
+						}
 					]
 				}
 			},
