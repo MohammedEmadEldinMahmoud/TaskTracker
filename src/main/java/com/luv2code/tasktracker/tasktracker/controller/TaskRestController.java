@@ -52,8 +52,8 @@ public class TaskRestController {
     @PatchMapping("/tasks/{task_id}/status")
     public TaskResponseDTO updateTaskStatus(
             @PathVariable int task_id,
-            @RequestBody TaskRequestDTO theTaskRequestDTO) {
-        return taskService.updateTaskStatus(task_id, theTaskRequestDTO.getStatus());
+            @RequestParam Status status) {
+        return taskService.updateTaskStatus(task_id, status);
     }
 
 
