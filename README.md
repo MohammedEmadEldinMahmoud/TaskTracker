@@ -250,10 +250,6 @@ Authorization: Bearer <JWT_TOKEN>
 
 ---
 
-## 👤 Author
 
-**Mohammed Emad**
-
----
 
 
